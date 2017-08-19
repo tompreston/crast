@@ -3,6 +3,8 @@ Crast is a simple open-source interface to Chromecast.
 
 In the future I'd like to add:
 - Simple controls (play/pause/stop/skip)
+- Interactive controls (so you don't have to search for chromecasts everytime)
+- Feedback, current state, messages, etc
 - Basic GUI, something like https://airflowapp.com/
 
 Maybe transcoding, but muuuuch later.
