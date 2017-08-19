@@ -27,6 +27,7 @@ This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
 This is free software, and you are welcome to redistribute it
 under certain conditions; type `show c' for details.
 '''
+CMDS = ['play', 'pause', 'stop', 'skip', 'rewind']
 
 
 def get_chromecast(friendly_name=None):
@@ -43,23 +44,52 @@ def get_chromecast(friendly_name=None):
     return cast;
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-            description=DESCRIPTION, epilog=EPILOGUE)
-    parser.add_argument('url', help='A URL to cast')
-    parser.add_argument('-d', '--device', help='A device to cast to')
-    args = parser.parse_args()
-
-    url_type, url_encoding = mimetypes.guess_type(args.url)
-    url_basename = os.path.basename(args.url)
-    cast = get_chromecast(args.device)
-
-    print('Casting to {}'.format(cast.device.friendly_name))
+def play_media_url(cast, url):
+    '''Tell chromecast to play media from a url.'''
+    url_type, url_encoding = mimetypes.guess_type(url)
+    url_basename = os.path.basename(url)
+    print('Playing media')
     print(url_basename)
     print(url_type)
 
     mc = cast.media_controller
-    mc.play_media(args.url, url_type, title=url_basename)
+    mc.play_media(url, url_type, title=url_basename)
+
+
+def command(cast, command):
+    '''Send a command to a chromecast.'''
+    mc = cast.media_controller
     mc.block_until_active()
+    print(command)
+    if command == 'play':
+        mc.play()
+    elif command == 'pause':
+        mc.pause()
+    elif command == 'stop':
+        mc.stop()
+    elif command == 'skip':
+        mc.skip()
+    elif command == 'rewind':
+        mc.rewind()
+    else:
+        print('Unknown command')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            description=DESCRIPTION, epilog=EPILOGUE)
+    parser.add_argument('-u', '--url', help='A URL to cast')
+    parser.add_argument('-d', '--device', help='The device to control')
+    parser.add_argument('-c', '--command', help='Send a command', choices=CMDS)
+    args = parser.parse_args()
+
+    cast = get_chromecast(args.device)
+    print('Found {}'.format(cast.device.friendly_name))
+
+    if args.url:
+        play_media_url(cast, args.url)
+
+    if args.command:
+        command(cast, args.command)
 
