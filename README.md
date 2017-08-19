@@ -9,6 +9,12 @@ In the future I'd like to add:
 
 Maybe transcoding, but muuuuch later.
 
+Let's get started:
+
+    git clone https://github.com/tompreston/crast.git
+    cd crast
+    pip install -r requirements.txt
+
 # Play URL
 
     python3 src/crast.py --url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
