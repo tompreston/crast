@@ -1,4 +1,4 @@
-# crast
+# Crast
 Crast is a simple open-source interface to Chromecast.
 
 In the future I'd like to add:
