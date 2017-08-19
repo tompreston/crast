@@ -29,6 +29,20 @@ under certain conditions; type `show c' for details.
 '''
 
 
+def get_chromecast(friendly_name=None):
+    '''Returns the named Chromecast or the first one found.'''
+    print('Searching for devices')
+    ccasts = pychromecast.get_chromecasts()
+    if args.device:
+        cast = next(cc for cc in ccasts
+                if cc.device.friendly_name == args.device)
+    else:
+        cast = ccasts[0]
+    cast.wait()
+
+    return cast;
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -39,15 +53,7 @@ if __name__ == '__main__':
 
     url_type, url_encoding = mimetypes.guess_type(args.url)
     url_basename = os.path.basename(args.url)
-
-    print('Searching for devices')
-    ccasts = pychromecast.get_chromecasts()
-    if args.device:
-        cast = next(cc for cc in ccasts
-                if cc.device.friendly_name == args.device)
-    else:
-        cast = ccasts[0]
-    cast.wait()
+    cast = get_chromecast(args.device)
 
     print('Casting to {}'.format(cast.device.friendly_name))
     print(url_basename)
