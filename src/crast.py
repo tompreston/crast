@@ -60,19 +60,12 @@ def command(cast, command):
     '''Send a command to a chromecast.'''
     mc = cast.media_controller
     mc.block_until_active()
-    print(command)
-    if command == 'play':
-        mc.play()
-    elif command == 'pause':
-        mc.pause()
-    elif command == 'stop':
-        mc.stop()
-    elif command == 'skip':
-        mc.skip()
-    elif command == 'rewind':
-        mc.rewind()
-    else:
+    try:
+        getattr(mc, command)()
+    except:
         print('Unknown command')
+    else:
+        print(command)
 
 
 if __name__ == '__main__':
