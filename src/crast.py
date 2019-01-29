@@ -27,7 +27,7 @@ This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
 This is free software, and you are welcome to redistribute it
 under certain conditions; type `show c' for details.
 '''
-CMDS = ['play', 'pause', 'stop', 'skip', 'rewind']
+CMDS = ('play', 'pause', 'stop', 'skip', 'rewind')
 
 
 def get_chromecast(friendly_name=None):
@@ -36,12 +36,12 @@ def get_chromecast(friendly_name=None):
     ccasts = pychromecast.get_chromecasts()
     if args.device:
         cast = next(cc for cc in ccasts
-                if cc.device.friendly_name == args.device)
+                    if cc.device.friendly_name == args.device)
     else:
         cast = ccasts[0]
     cast.wait()
 
-    return cast;
+    return cast
 
 
 def play_media_url(cast, url):
@@ -50,7 +50,7 @@ def play_media_url(cast, url):
     url_basename = os.path.basename(url)
     print('Playing media')
     print(url_basename)
-    print(url_type)
+    print(url_type, url_encoding)
 
     mc = cast.media_controller
     mc.play_media(url, url_type, title=url_basename)
@@ -70,8 +70,8 @@ def command(cast, command):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-            description=DESCRIPTION, epilog=EPILOGUE)
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=DESCRIPTION, epilog=EPILOGUE)
     parser.add_argument('-u', '--url', help='A URL to cast')
     parser.add_argument('-d', '--device', help='The device to control')
     parser.add_argument('-c', '--command', help='Send a command', choices=CMDS)
@@ -85,4 +85,3 @@ if __name__ == '__main__':
 
     if args.command:
         command(cast, args.command)
-
