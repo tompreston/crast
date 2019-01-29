@@ -21,15 +21,15 @@ Let's get started:
 
 Or choose a device:
 
-    python3 src/crast.py --device "Chromecast Bitch" -u http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+    python3 src/crast.py --device "Living Room TV" -u http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 
 # Controls
 
-    python3 src/crast.py -d "Chromecast Bitch" -c play
-    python3 src/crast.py -d "Chromecast Bitch" -c pause
-    python3 src/crast.py -d "Chromecast Bitch" -c stop
-    python3 src/crast.py -d "Chromecast Bitch" -c skip
-    python3 src/crast.py -d "Chromecast Bitch" -c rewind
+    python3 src/crast.py -d "Living Room TV" -c play
+    python3 src/crast.py -d "Living Room TV" -c pause
+    python3 src/crast.py -d "Living Room TV" -c stop
+    python3 src/crast.py -d "Living Room TV" -c skip
+    python3 src/crast.py -d "Living Room TV" -c rewind
 
 # Playing local files
 Host the files:
