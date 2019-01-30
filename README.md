@@ -5,6 +5,7 @@ In the future I'd like to add:
 - ~~Simple controls (play/pause/stop/skip)~~
 - Interactive controls (so you don't have to search for chromecasts everytime)
 - Feedback, current state, messages, etc
+- Stream display? https://trac.ffmpeg.org/wiki/Capture/Desktop https://trac.ffmpeg.org/wiki/StreamingGuide
 - Basic GUI, something like https://airflowapp.com/
 
 Maybe transcoding, but muuuuch later.
