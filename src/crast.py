@@ -14,6 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import sys
 import os.path
 import argparse
 import mimetypes
@@ -29,16 +30,22 @@ under certain conditions; type `show c' for details.
 '''
 CMDS = ('play', 'pause', 'stop', 'skip', 'rewind')
 
-
 def get_chromecast(friendly_name=None):
     '''Returns the named Chromecast or the first one found.'''
     print('Searching for devices')
+
     ccasts = pychromecast.get_chromecasts()
-    if args.device:
-        cast = next(cc for cc in ccasts
-                    if cc.device.friendly_name == args.device)
+    num_ccasts = len(ccasts)
+    if num_ccasts <= 0:
+        return None
+
+    if friendly_name:
+        for cc in ccasts:
+            if cc.device.friendly_name == friendly_name:
+                cast = cc
     else:
         cast = ccasts[0]
+
     cast.wait()
 
     return cast
@@ -78,6 +85,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     cast = get_chromecast(args.device)
+    if cast is None:
+        print("No Chromecast devices found")
+        sys.exit(1)
+
     print('Found {}'.format(cast.device.friendly_name))
 
     if args.url:
