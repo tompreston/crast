@@ -76,6 +76,7 @@ def search_chromecasts(device_name):
         return None
 
     pr_chromecasts(cc)
+    print()
 
     if device_name:
         cc = list(filter(lambda d: is_chromecast(d, device_name), cc))
