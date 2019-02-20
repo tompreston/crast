@@ -29,9 +29,9 @@ Let's get started:
 
 # Play URL
 
-    python crast.py --device "Living Room TV" -u http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+    python crast.py --device "Living Room TV" --url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
     python crast.py -d L -u http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
-    python crast.py --url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+    python crast.py -u http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 
 # Controls
 
