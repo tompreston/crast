@@ -44,7 +44,7 @@ def parse_args():
 
 def pr_chromecasts(cc):
     """Print useful information about Chromecasts."""
-    if not cc:
+    if cc:
         print("{:>36s} {}".format("UUID", "Friendly name"))
     for c in cc:
         print(f"{c.device.uuid} {c.device.friendly_name}")
