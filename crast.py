@@ -40,6 +40,8 @@ def parse_args():
                         help="The device to control (fuzzy search UUID or "
                              "Friendly name)")
     parser.add_argument("-c", "--command", help="Send a command", choices=CMDS)
+    parser.add_argument("-s", "--status", help="Print the device status",
+                        action="store_true")
     return parser.parse_args()
 
 def pr_chromecasts(cc):
@@ -105,6 +107,13 @@ def command_chromecast(c, command):
     else:
         print(command)
 
+def pr_status(c):
+    """Print the status of a Chromecast."""
+    for a in "uuid", "friendly_name", "model_name", "manufacturer", "cast_type":
+        print("{:>13} {}".format(a, getattr(c.device, a)))
+    for a in "uri", "is_idle", "app_id", "app_display_name":
+        print("{:>13} {}".format(a, getattr(c, a)))
+
 def crast(args):
     """Control a Chromecast."""
     c = search_chromecasts(args.device_name)
@@ -118,6 +127,8 @@ def crast(args):
         play_media_url(c, args.url)
     if args.command:
         command_chromecast(c, args.command)
+    if args.status:
+        pr_status(c)
 
 if __name__ == "__main__":
     crast(parse_args())
