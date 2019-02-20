@@ -42,6 +42,8 @@ def parse_args():
     parser.add_argument("-c", "--command", help="Send a command", choices=CMDS)
     parser.add_argument("-s", "--status", help="Print the device status",
                         action="store_true")
+    parser.add_argument("-q", "--quit-app", help="Quit the currently app",
+                        action="store_true")
     return parser.parse_args()
 
 def pr_chromecasts(cc):
@@ -128,6 +130,8 @@ def crast(args):
         play_media_url(c, args.url)
     if args.command:
         command_chromecast(c, args.command)
+    if args.quit_app:
+        c.quit_app()
     if args.status:
         pr_status(c)
 
