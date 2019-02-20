@@ -14,85 +14,110 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import sys
-import os.path
 import argparse
 import mimetypes
+import os.path
+import sys
+
 import pychromecast
 
-
-DESCRIPTION = 'crast is a simple interface to pychromecast'
-EPILOGUE = '''
+DESCRIPTION = "crast is a simple interface to pychromecast"
+EPILOGUE = """
 crast Copyright (C) 2017 Thomas Preston <thomasmarkpreston@gmail.com>
-This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show w".
 This is free software, and you are welcome to redistribute it
-under certain conditions; type `show c' for details.
-'''
-CMDS = ('play', 'pause', 'stop', 'skip', 'rewind')
+under certain conditions; type `show c" for details.
+"""
+CMDS = ("play", "pause", "stop", "skip", "rewind")
 
-def get_chromecast(friendly_name=None):
-    '''Returns the named Chromecast or the first one found.'''
-    print('Searching for devices')
+def parse_args():
+    """Returns a populated argument namespace."""
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=DESCRIPTION, epilog=EPILOGUE)
+    parser.add_argument("-u", "--url", help="A URL to cast")
+    parser.add_argument("-d", "--device-name",
+                        help="The device to control (fuzzy search UUID or "
+                             "Friendly name)")
+    parser.add_argument("-c", "--command", help="Send a command", choices=CMDS)
+    return parser.parse_args()
 
-    ccasts = pychromecast.get_chromecasts()
-    num_ccasts = len(ccasts)
-    if num_ccasts <= 0:
+def pr_chromecasts(cc):
+    """Print useful information about Chromecasts."""
+    if not cc:
+        print("{:>36s} {}".format("UUID", "Friendly name"))
+    for c in cc:
+        print(f"{c.device.uuid} {c.device.friendly_name}")
+
+def is_chromecast(c, uuid_or_frname):
+    """Returns True if Chromecast c matches UUID or Friendly name. The match is
+    fuzzy, so partial matches also return True:
+
+        Living in "Living Room TV"
+        L in "Living Room TV"
+        877c6398 in "877c6398-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+
+    """
+    for propery in str(c.device.uuid), c.device.friendly_name:
+        if uuid_or_frname in propery:
+            return True
+    return False
+
+def search_chromecasts(device_name):
+    """Search for Chromecasts on the network, print and filter them, then
+    return the first one found.
+    """
+    print("Searching for Chromecasts")
+    cc = pychromecast.get_chromecasts()
+    if not cc:
+        print("No Chromecast found")
         return None
 
-    if friendly_name:
-        for cc in ccasts:
-            if cc.device.friendly_name == friendly_name:
-                cast = cc
-    else:
-        cast = ccasts[0]
+    pr_chromecasts(cc)
 
-    cast.wait()
+    if device_name:
+        cc = list(filter(lambda d: is_chromecast(d, device_name), cc))
+        if not cc:
+            print(f"Could not find {device_name}")
+            return None
 
-    return cast
-
+    return cc[0]
 
 def play_media_url(cast, url):
-    '''Tell chromecast to play media from a url.'''
+    """Tell Chromecast to play media from a url."""
     url_type, url_encoding = mimetypes.guess_type(url)
     url_basename = os.path.basename(url)
-    print('Playing media')
+    print("Playing media")
     print(url_basename)
     print(url_type, url_encoding)
 
     mc = cast.media_controller
     mc.play_media(url, url_type, title=url_basename)
 
-
-def command(cast, command):
-    '''Send a command to a chromecast.'''
-    mc = cast.media_controller
+def command_chromecast(c, command):
+    """Send a command to a Chromecast."""
+    mc = c.media_controller
     mc.block_until_active()
     try:
         getattr(mc, command)()
-    except:
-        print('Unknown command')
+    except AttributeError:
+        print("Unknown command")
     else:
         print(command)
 
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=DESCRIPTION, epilog=EPILOGUE)
-    parser.add_argument('-u', '--url', help='A URL to cast')
-    parser.add_argument('-d', '--device', help='The device to control')
-    parser.add_argument('-c', '--command', help='Send a command', choices=CMDS)
-    args = parser.parse_args()
-
-    cast = get_chromecast(args.device)
-    if cast is None:
-        print("No Chromecast devices found")
+def crast(args):
+    """Control a Chromecast."""
+    c = search_chromecasts(args.device_name)
+    if not c:
+        print("No Chromecast selected, aborting")
         sys.exit(1)
 
-    print('Found {}'.format(cast.device.friendly_name))
+    print(f"Using '{c.device.friendly_name}'")
 
     if args.url:
-        play_media_url(cast, args.url)
-
+        play_media_url(c, args.url)
     if args.command:
-        command(cast, args.command)
+        command_chromecast(c, args.command)
+
+if __name__ == "__main__":
+    crast(parse_args())
