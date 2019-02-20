@@ -44,6 +44,8 @@ def parse_args():
                         action="store_true")
     parser.add_argument("-q", "--quit-app", help="Quit the currently app",
                         action="store_true")
+    parser.add_argument("-r", "--reboot", help="Reboot the Chromecast",
+                        action="store_true")
     return parser.parse_args()
 
 def pr_chromecasts(cc):
@@ -134,6 +136,8 @@ def crast(args):
         c.quit_app()
     if args.status:
         pr_status(c)
+    if args.reboot:
+        c.reboot()
 
 if __name__ == "__main__":
     crast(parse_args())
