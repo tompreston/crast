@@ -51,3 +51,8 @@ Then tell Chromecast to play the file:
     python crast.py -u http://192.168.0.122:8000/video.mp4
     python crast.py -u http://192.168.0.122:8000/music.mp3
     python crast.py -u http://192.168.0.122:8000/picture.jpg
+
+# Launch apps
+
+    python crast.py --app-start youtube
+    python crast.py -a spotify
