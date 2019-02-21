@@ -90,7 +90,7 @@ def search_chromecasts(device_name):
 
     return cc[0]
 
-def play_media_url(cast, url):
+def cr_play_url(cast, url):
     """Tell Chromecast to play media from a url."""
     url_type, url_encoding = mimetypes.guess_type(url)
     url_basename = os.path.basename(url)
@@ -101,7 +101,7 @@ def play_media_url(cast, url):
     mc = cast.media_controller
     mc.play_media(url, url_type, title=url_basename)
 
-def command_chromecast(c, command):
+def cr_cmd(c, command):
     """Send a command to a Chromecast."""
     mc = c.media_controller
     mc.block_until_active()
@@ -129,9 +129,9 @@ def crast(args):
     print(f"Using '{c.device.friendly_name}'")
 
     if args.url:
-        play_media_url(c, args.url)
+        cr_play_url(c, args.url)
     if args.command:
-        command_chromecast(c, args.command)
+        cr_cmd(c, args.command)
     if args.quit_app:
         c.quit_app()
     if args.status:
