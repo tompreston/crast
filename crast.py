@@ -90,16 +90,14 @@ def search_chromecasts(device_name):
 
     return cc[0]
 
-def cr_play_url(cast, url):
+def cr_play_url(c, url):
     """Tell Chromecast to play media from a url."""
     url_type, url_encoding = mimetypes.guess_type(url)
     url_basename = os.path.basename(url)
-    print("Playing media")
-    print(url_basename)
-    print(url_type, url_encoding)
-
-    mc = cast.media_controller
-    mc.play_media(url, url_type, title=url_basename)
+    print(f" Playing {url}")
+    print(f"    type {url_type}")
+    print(f"encoding {url_encoding}")
+    c.play_media(url, url_type, title=url_basename)
 
 def cr_cmd(c, command):
     """Send a command to a Chromecast."""
