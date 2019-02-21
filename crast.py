@@ -29,6 +29,12 @@ This is free software, and you are welcome to redistribute it
 under certain conditions; type `show c" for details.
 """
 CMDS = ("play", "pause", "stop", "skip", "rewind")
+APPS = {"backdrop": pychromecast.APP_BACKDROP,
+        "youtube": pychromecast.APP_YOUTUBE,
+        "media_receiver": pychromecast.APP_MEDIA_RECEIVER,
+        "plex": pychromecast.APP_PLEX,
+        "dashcast": pychromecast.APP_DASHCAST,
+        "spotify": pychromecast.APP_SPOTIFY}
 
 def parse_args():
     """Returns a populated argument namespace."""
@@ -42,6 +48,7 @@ def parse_args():
     parser.add_argument("-c", "--command", help="Send a command", choices=CMDS)
     parser.add_argument("-s", "--status", help="Print the device status",
                         action="store_true")
+    parser.add_argument("-a", "--app-start", help="Start an app")
     parser.add_argument("-q", "--quit-app", help="Quit the currently app",
                         action="store_true")
     parser.add_argument("-r", "--reboot", help="Reboot the Chromecast",
@@ -121,6 +128,18 @@ def cr_reboot(c):
     print("Rebooting")
     c.reboot()
 
+def cr_app_start(c, app_fuzz):
+    for name in APPS:
+        if app_fuzz in name:
+            print(f"Starting '{name}' (force launch)")
+            app_id = APPS[name]
+            c.start_app(app_id, force_launch=True)
+            break
+    else:
+        print(f"Could not find {app_fuzz} in apps. Try:")
+        for name in apps:
+            print(name)
+
 def cr_quit_app(c):
     print("Quiting app")
     c.quit_app()
@@ -134,6 +153,8 @@ def crast(args):
 
     print(f"Using '{c.device.friendly_name}'")
 
+    if args.app_start:
+        cr_app_start(c, args.app_start)
     if args.url:
         cr_play_url(c, args.url)
     if args.command:
