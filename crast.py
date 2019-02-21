@@ -114,10 +114,10 @@ def command_chromecast(c, command):
 
 def pr_status(c):
     """Print the status of a Chromecast."""
-    for a in "uuid", "friendly_name", "model_name", "manufacturer", "cast_type":
-        print("{:>13} {}".format(a, getattr(c.device, a)))
-    for a in "uri", "is_idle", "app_id", "app_display_name":
-        print("{:>13} {}".format(a, getattr(c, a)))
+    attrs = ("uuid", "name", "model_name", "cast_type", "uri", "is_idle",
+             "app_id", "app_display_name")
+    for a in attrs:
+        print("{:>{}} {}".format(a, max(map(len, attrs)), getattr(c, a)))
 
 def crast(args):
     """Control a Chromecast."""
