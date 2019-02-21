@@ -117,6 +117,14 @@ def pr_status(c):
     for a in attrs:
         print("{:>{}} {}".format(a, max(map(len, attrs)), getattr(c, a)))
 
+def cr_reboot(c):
+    print("Rebooting")
+    c.reboot()
+
+def cr_quit_app(c):
+    print("Quiting app")
+    c.quit_app()
+
 def crast(args):
     """Control a Chromecast."""
     c = search_chromecasts(args.device_name)
@@ -131,11 +139,11 @@ def crast(args):
     if args.command:
         cr_cmd(c, args.command)
     if args.quit_app:
-        c.quit_app()
+        cr_quit_app(c)
     if args.status:
         pr_status(c)
     if args.reboot:
-        c.reboot()
+        cr_reboot(c)
 
 if __name__ == "__main__":
     crast(parse_args())
