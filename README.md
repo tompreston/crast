@@ -2,6 +2,8 @@
 Crast is a simple open-source interface to pychromecast. It aims to make
 streaming local (or remote) files to a Chromecast device trivial.
 
+Note: Now you can cast media with VLC 3.0
+
 It currently supports:
 - Command line interface
 - Searching and displaying local Chromecasts
